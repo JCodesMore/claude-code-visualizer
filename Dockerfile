@@ -60,9 +60,9 @@ COPY --from=node-builder /app/web/node_modules ./web/node_modules
 # Create data directory for SQLite database
 RUN mkdir -p /app/data && chown -R appuser:appgroup /app
 
-# Copy startup script
+# Copy startup script and convert Windows line endings to Unix
 COPY docker-entrypoint.sh ./
-RUN chmod +x docker-entrypoint.sh
+RUN sed -i 's/\r$//' docker-entrypoint.sh && chmod +x docker-entrypoint.sh
 
 # Environment variables with defaults
 ENV PORT=3001
