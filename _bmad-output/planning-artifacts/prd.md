@@ -1,5 +1,5 @@
 ---
-stepsCompleted: [1, 2, 3, 4, 7]
+stepsCompleted: [1, 2, 3, 4, 7, 8, 9, 10, 11]
 inputDocuments:
   - '_bmad-output/planning-artifacts/research/technical-claude-code-visualizer-research-2026-01-04.md'
   - '_bmad-output/analysis/brainstorming-session-2026-01-03.md'
@@ -257,3 +257,193 @@ This is a **brownfield web application** - a new Canvas Visualization page added
 - Vite (existing)
 - TypeScript strict mode
 - Existing ESLint/Prettier config
+
+## Project Scoping & Phased Development
+
+### MVP Strategy & Philosophy
+
+**MVP Approach:** Experience MVP - deliver the core visual experience of watching agents work
+
+**Scope Classification:** Simple MVP (solo developer, personal tooling, lean scope)
+
+**Key Simplification:** Leverages existing proxy infrastructure - no new data ingestion needed. The proxy already captures all Claude Code traffic to SQLite. This page is a new visualization of existing data.
+
+### Data Architecture (Existing)
+
+```
+Claude Code CLI → Proxy (:3001) → SQLite → REST API → Canvas Page
+                                              ↑
+                                    (existing endpoints)
+```
+
+**No new backend work required for MVP** - uses existing:
+- `/api/requests` - logged API traffic
+- `/api/conversations` - parsed JSONL sessions
+- Existing WebSocket or polling for real-time updates (if available)
+
+### MVP Feature Set (Phase 1)
+
+**Core User Journey Supported:** "Understanding the Agent Orchestra"
+
+**Must-Have Capabilities:**
+
+| Feature | Description | Justification |
+|---------|-------------|---------------|
+| React Flow Canvas | Session → Agent → Subagent hierarchy | Core visual experience |
+| Real-time Updates | Canvas updates as proxy receives traffic | "Watch agents work" value prop |
+| Node Status States | Orange (active), green (complete), red (error) | Visual clarity |
+| Node Selection | Click node to see details in sidebar | Context switching |
+| Resizable Sidebar | Show messages for selected node | Detail inspection |
+| Anthropic Theming | shadcn/ui + Anthropic color palette | Professional, branded look |
+| Zoom/Pan Controls | Navigate large agent trees | Usability essential |
+
+**Explicitly Out of MVP:**
+- Breadcrumb navigation (can use canvas zoom instead)
+- Search/filter
+- Minimap
+- Session management (use existing dashboard for that)
+
+### Post-MVP Features
+
+**Phase 2 (Growth):**
+- Breadcrumb trail for deep hierarchies
+- Search/filter nodes and messages
+- Minimap for large sessions
+- Session picker/switcher on canvas page
+
+**Phase 3 (Expansion):**
+- Timeline/scrubber for time-travel
+- Session recording and replay controls
+- Multi-session comparison view
+
+### Vision (Future)
+
+- Tauri desktop app
+- Collaborative viewing (multiple users)
+- Direct Claude Code integration (bypass proxy)
+
+### Risk Mitigation Strategy
+
+| Risk Type | Risk | Mitigation |
+|-----------|------|------------|
+| **Technical** | React Flow performance with 100+ nodes | Memoization, virtualization, throttled updates |
+| **Technical** | Real-time sync with proxy data | Use existing polling/WebSocket patterns from dashboard |
+| **Scope** | Feature creep | Strict MVP boundary - defer everything to Phase 2 |
+| **Integration** | Breaking existing dashboard | New route, shared layout, no modifications to existing pages |
+
+### Resource Requirements
+
+**Team:** Solo developer
+**Timeline:** MVP achievable in focused sprint
+**Dependencies:** Existing proxy API must support real-time or near-real-time data access
+
+## Functional Requirements
+
+### Canvas Visualization
+
+- FR1: User can view Claude Code session as a hierarchical node graph
+- FR2: User can see Session node as the root of the hierarchy
+- FR3: User can see Main Agent node as child of Session
+- FR4: User can see Subagent nodes as children of their spawning agent
+- FR5: User can see connection lines between parent and child nodes
+- FR6: User can see labels on connections indicating relationship ("spawned", "returned")
+
+### Real-Time Updates
+
+- FR7: User can see new nodes appear on canvas as agents spawn during live session
+- FR8: User can see node status change in real-time as agents execute
+- FR9: User can see canvas update automatically without manual refresh
+- FR10: System receives updates from existing proxy API endpoints
+
+### Node Status & States
+
+- FR11: User can see visual indication when a node is actively executing (in-progress state)
+- FR12: User can see visual indication when a node has completed successfully
+- FR13: User can see visual indication when a node has encountered an error
+- FR14: User can distinguish between different node states at a glance via color coding
+
+### Node Interaction
+
+- FR15: User can click on any node to select it
+- FR16: User can see visual indication of which node is currently selected
+- FR17: User can deselect a node by clicking elsewhere on canvas
+
+### Sidebar Detail Panel
+
+- FR18: User can view a sidebar panel alongside the canvas
+- FR19: User can resize the sidebar panel width
+- FR20: User can see messages associated with the selected node in the sidebar
+- FR21: User can see tool calls made by the selected agent in the sidebar
+- FR22: User can see tool results returned to the selected agent in the sidebar
+- FR23: User can see the task prompt for a subagent when that subagent is selected
+- FR24: User can expand/collapse individual messages in the sidebar
+
+### Canvas Navigation
+
+- FR25: User can zoom in on the canvas to see more detail
+- FR26: User can zoom out on the canvas to see more of the hierarchy
+- FR27: User can pan the canvas to navigate to different areas
+- FR28: User can use zoom controls (buttons or gestures) to adjust view
+- FR29: User can fit entire graph in viewport with a single action
+
+### Layout & Hierarchy
+
+- FR30: System automatically positions nodes in a top-down tree layout
+- FR31: System re-layouts graph when new nodes are added
+- FR32: User can see clear visual hierarchy from Session → Agent → Subagents
+
+### Theming & Appearance
+
+- FR33: User can view the canvas page in dark mode
+- FR34: User can see Anthropic-themed color palette applied to the interface
+- FR35: User can see consistent styling with shadcn/ui components
+
+### Integration
+
+- FR36: User can navigate to canvas page from existing dashboard
+- FR37: User can return to existing dashboard views from canvas page
+- FR38: System reads session data from existing proxy API
+
+## Non-Functional Requirements
+
+### Performance
+
+| Metric | Requirement | Rationale |
+|--------|-------------|-----------|
+| **Canvas Rendering** | 60fps with up to 100 nodes visible | Smooth animations for node status changes |
+| **Streaming Latency** | <100ms from proxy event to canvas update | Real-time feel for "watching agents work" |
+| **Initial Load** | <3 seconds to interactive canvas | Quick access when switching from terminal |
+| **Memory Stability** | No memory leaks during extended sessions | Sessions can run for hours |
+| **Layout Calculation** | <50ms for re-layout when nodes added | Seamless node appearance animations |
+
+**Optimization Requirements:**
+- React Flow virtualization enabled (`onlyRenderVisibleElements`)
+- Custom nodes wrapped in `React.memo()`
+- Streaming updates throttled/batched to prevent render thrashing
+- Zustand selectors for minimal re-renders
+
+### Integration
+
+| Requirement | Specification |
+|-------------|---------------|
+| **Data Source** | Existing proxy REST API endpoints |
+| **Update Mechanism** | Polling or WebSocket (use existing pattern from dashboard) |
+| **API Compatibility** | No changes to existing proxy API required |
+| **Coexistence** | Canvas page runs alongside existing dashboard without conflicts |
+| **Routing** | New Remix route integrates with existing app shell |
+| **Shared Resources** | Reuses existing Tailwind config, layout components |
+
+### Reliability
+
+| Requirement | Specification |
+|-------------|---------------|
+| **Error Handling** | Canvas displays error state if API connection fails |
+| **Recovery** | Manual page refresh recovers from connection issues |
+| **Data Integrity** | No data modification - read-only visualization |
+
+**Explicitly Not Required (MVP):**
+- Authentication/authorization
+- HTTPS (local development tool)
+- Audit logging
+- Backup/recovery
+- High availability
