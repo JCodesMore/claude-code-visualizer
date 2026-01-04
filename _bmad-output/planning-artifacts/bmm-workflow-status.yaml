@@ -1,0 +1,94 @@
+# Workflow Status Template
+
+# This tracks progress through BMM methodology Analysis, Planning, and Solutioning phases.
+# Implementation phase is tracked separately in sprint-status.yaml
+
+# STATUS DEFINITIONS:
+# ==================
+# Initial Status (before completion):
+#   - required: Must be completed to progress
+#   - optional: Can be completed but not required
+#   - recommended: Strongly suggested but not required
+#   - conditional: Required only if certain conditions met (e.g., if_has_ui)
+#
+# Completion Status:
+#   - {file-path}: File created/found (e.g., "docs/product-brief.md")
+#   - skipped: Optional/conditional workflow that was skipped
+
+generated: "2026-01-03"
+project: "claude-code-visualizer"
+project_type: "feature-enhancement"
+selected_track: "method"
+field_type: "brownfield"
+workflow_path: "_bmad/bmm/workflows/workflow-status/paths/method-brownfield.yaml"
+
+# Phase 0: Documentation (Brownfield Prerequisite)
+phase_0_documentation:
+  document-project:
+    status: "docs/index.md"  # COMPLETED 2026-01-03
+    agent: analyst
+    command: /bmad:bmm:workflows:document-project
+    purpose: Understand existing codebase before planning
+    outputs:
+      - docs/index.md
+      - docs/project-structure.md
+      - docs/technology-stack.md
+      - docs/api-and-data-models.md
+      - docs/existing-documentation.md
+
+# Phase 1: Analysis (Optional - User Selected)
+phase_1_analysis:
+  brainstorm:
+    status: recommended  # User selected
+    agent: analyst
+    command: /bmad:core:workflows:brainstorming
+    purpose: Creative exploration for visualization ideas
+  research:
+    status: recommended  # User selected
+    agent: analyst
+    command: /bmad:bmm:workflows:research
+    purpose: Technical research on graph visualization, similar tools
+
+# Phase 2: Planning
+phase_2_planning:
+  prd:
+    status: required
+    agent: pm
+    command: /bmad:bmm:workflows:create-prd
+    purpose: Define visualization feature requirements
+  ux-design:
+    status: conditional  # if_has_ui - YES for this project
+    agent: ux-designer
+    command: /bmad:bmm:workflows:create-ux-design
+    purpose: Design session tabs, node hierarchy, interactions
+
+# Phase 3: Solutioning
+phase_3_solutioning:
+  architecture:
+    status: required
+    agent: architect
+    command: /bmad:bmm:workflows:create-architecture
+    purpose: Plan data transformation, component integration
+  epics-and-stories:
+    status: required
+    agent: pm
+    command: /bmad:bmm:workflows:create-epics-and-stories
+    purpose: Break down into implementable stories
+  test-design:
+    status: optional
+    agent: tea
+    command: /bmad:bmm:workflows:testarch-test-design
+    purpose: Testability assessment
+  implementation-readiness:
+    status: required
+    agent: architect
+    command: /bmad:bmm:workflows:implementation-readiness
+    purpose: Validate all artifacts before implementation
+
+# Phase 4: Implementation
+phase_4_implementation:
+  sprint-planning:
+    status: required
+    agent: sm
+    command: /bmad:bmm:workflows:sprint-planning
+    purpose: Create sprint plan and begin development

@@ -1,0 +1,71 @@
+{
+  "workflow_version": "1.2.0",
+  "timestamps": {
+    "started": "2026-01-03T21:00:00Z",
+    "last_updated": "2026-01-03T21:25:00Z",
+    "completed": "2026-01-03T21:25:00Z"
+  },
+  "mode": "initial_scan",
+  "scan_level": "deep",
+  "project_root": "C:\\Users\\jmd50\\Documents\\Main\\Projects\\Claude\\claude-code-visualizer",
+  "output_folder": "docs",
+  "completed_steps": [
+    {
+      "step": "step_1",
+      "status": "completed",
+      "timestamp": "2026-01-03T21:05:00Z",
+      "summary": "Classified as multi-part with 2 parts (proxy: backend, web: web)"
+    },
+    {
+      "step": "step_2",
+      "status": "completed",
+      "timestamp": "2026-01-03T21:08:00Z",
+      "summary": "Found 4 existing docs (README.md, LICENSE, .env.example, config.yaml.example)"
+    },
+    {
+      "step": "step_3",
+      "status": "completed",
+      "timestamp": "2026-01-03T21:12:00Z",
+      "summary": "Tech stack: Go 1.20 + gorilla/mux (proxy), Remix 2.16.8 + React 18 + Tailwind (web)"
+    },
+    {
+      "step": "step_4",
+      "status": "completed",
+      "timestamp": "2026-01-03T21:20:00Z",
+      "summary": "Deep scan: 12 API endpoints, 8+ data models, SQLite schema documented"
+    },
+    {
+      "step": "step_5",
+      "status": "completed",
+      "timestamp": "2026-01-03T21:25:00Z",
+      "summary": "Generated index.md with architecture summary, quick links, and AI agent guidance"
+    }
+  ],
+  "current_step": "completed",
+  "project_types": [
+    {"part_id": "proxy", "project_type_id": "backend", "display_name": "Go Backend API"},
+    {"part_id": "web", "project_type_id": "web", "display_name": "React/Remix Web Frontend"}
+  ],
+  "findings": {
+    "project_classification": "Multi-part, 2 parts, Go + React/TypeScript",
+    "existing_docs_count": 4,
+    "technology_stack": {
+      "proxy": "Go 1.20, gorilla/mux, SQLite, YAML config",
+      "web": "Remix 2.16.8, React 18, TypeScript, Tailwind CSS, Vite"
+    },
+    "api_endpoints": 12,
+    "data_models": {
+      "proxy": ["RequestLog", "ResponseLog", "AnthropicRequest", "AnthropicMessage", "ConversationMessage", "Conversation"],
+      "web": ["Request", "ConversationSummary", "Conversation"]
+    }
+  },
+  "outputs_generated": [
+    "project-scan-report.json",
+    "project-structure.md",
+    "existing-documentation.md",
+    "technology-stack.md",
+    "api-and-data-models.md",
+    "index.md"
+  ],
+  "resume_instructions": "Workflow completed successfully"
+}
