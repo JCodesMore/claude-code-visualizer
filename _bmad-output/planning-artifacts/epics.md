@@ -1,5 +1,7 @@
 ---
-stepsCompleted: [1, 2, 3]
+stepsCompleted: [1, 2, 3, 4]
+status: 'complete'
+completedAt: '2026-01-04'
 inputDocuments:
   - '_bmad-output/planning-artifacts/prd.md'
   - '_bmad-output/planning-artifacts/architecture.md'
@@ -7,6 +9,9 @@ workflowType: 'epics-and-stories'
 project_name: 'claude-code-visualizer'
 user_name: 'Jmd50'
 date: '2026-01-04'
+epicCount: 4
+storyCount: 17
+frCoverage: 38
 ---
 
 # claude-code-visualizer - Epic Breakdown
