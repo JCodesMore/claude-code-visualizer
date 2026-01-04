@@ -1,12 +1,13 @@
 ---
-stepsCompleted: [1, 2]
+stepsCompleted: [1, 2, 3]
 inputDocuments: ['docs/index.md', 'docs/api-and-data-models.md']
 session_topic: 'Claude Code Agent Visualization - Canvas-based hierarchical view with interactive node exploration'
 session_goals: 'Node architecture, message chain visualization, data transformation, canvas UX, Anthropic-themed design system with shadcn/ui'
 selected_approach: 'ai-recommended'
 techniques_used: ['Mind Mapping', 'Cross-Pollination', 'SCAMPER Method']
-ideas_generated: []
+ideas_generated: ['node-hierarchy', 'sidebar-model', 'message-components', 'node-states', 'canvas-features', 'v1-scope']
 context_file: ''
+technique_execution_complete: true
 ---
 
 # Brainstorming Session Results
@@ -103,3 +104,113 @@ Session Node (JSONL file) → Main Agent (sessionId) → Subagents (Task spawns)
 - Detect subagent spawn via `Task` tool_use in message content
 - Stack-based agent attribution (push on spawn, pop on return)
 - Refine from real JSONL data in ~/.claude/projects as needed
+
+---
+
+## Technique 2: Cross-Pollination Results
+
+### Inspiration Sources Analyzed
+- React DevTools (component tree, breadcrumbs)
+- Chrome DevTools Network (waterfall timing)
+- LangSmith/LangGraph (agent trace visualization)
+- Figma/Miro (canvas controls)
+- VS Code Debug (call stack context)
+
+### Features to Steal
+
+| Feature | Source | Priority |
+|---------|--------|----------|
+| Breadcrumb trail | React DevTools | High |
+| Minimap | Figma | High |
+| Status colors on nodes | LangSmith | High |
+| Token/latency badges | LangSmith | High |
+| Zoom-to-fit button | Figma | Medium |
+| Waterfall timing bars | Chrome Network | Medium |
+| Search/filter tree | React DevTools | Medium |
+| Connection line labels | Miro | Low |
+
+---
+
+## Technique 3: SCAMPER Results
+
+### Eliminate (v1 Scope)
+
+**Cut from v1:**
+- Timeline/replay (timestamps preserved for v2)
+- Waterfall timing bars
+- Search/filter
+- Chat input box
+- Minimap (maybe v2)
+
+**Keep for v1:**
+- Canvas with Session → Agent → Subagent nodes
+- Connection lines with labels ("spawned" / "returned")
+- Left sidebar with messages (resizable)
+- Node states (active/complete/error colors + animations)
+- Breadcrumb trail
+- Zoom/pan controls
+- Expand/collapse messages
+- shadcn/ui + Anthropic theming
+
+### Substitute
+- **Canvas Library:** React Flow (purpose-built for node graphs)
+
+### Combine
+- Click node on canvas → Sidebar shows that node's messages
+- Connection labels: Simple "spawned" / "returned"
+
+### Adapt
+- React Flow default nodes → Custom shadcn-styled components
+- Layout: Top-down tree (Session at top)
+- Edge styling: Anthropic-themed, status-aware
+
+### Modify (Anthropic Theming)
+- Color palette: Anthropic warm beige/terracotta + semantic colors
+- Node cards: shadcn Card with custom styling
+- Sidebar: shadcn resizable panel
+- Typography: Clean, modern (Inter or similar)
+
+### Reverse
+- Confirmed: Canvas-primary (hierarchy IS the core value), sidebar for detail
+
+---
+
+## Session Summary
+
+### v1 Feature Specification
+
+**Core Architecture:**
+- React Flow canvas with top-down tree layout
+- Resizable left sidebar (shadcn)
+- Anthropic-themed design system with shadcn/ui components
+
+**Node Types:**
+1. **Session Node** - Root, shows all messages when selected
+2. **Main Agent Node** - Primary Claude instance
+3. **Subagent Nodes** - Spawned via Task tool, connected with "spawned"/"returned" labels
+
+**Sidebar Behavior:**
+- Default: Session node selected, all messages shown
+- On node click: Shows selected agent's messages only
+- Messages: Collapsed by default, expandable for full details
+- Chronological order, latest at bottom
+
+**Node Visual States:**
+- Active: Orange border + pulse animation
+- Complete: Green border
+- Error: Red border
+- Selected: Blue ring
+
+**Canvas Features:**
+- Zoom/pan controls
+- Zoom-to-fit button
+- Breadcrumb trail (Session > Main Agent > Subagent)
+- Connection lines with labels
+
+**Data Transformation:**
+- Parse JSONL from ~/.claude/projects
+- Detect subagent spawns via Task tool_use
+- Stack-based agent attribution
+
+### Ready for PRD
+This brainstorming output provides comprehensive input for the PRD workflow.
