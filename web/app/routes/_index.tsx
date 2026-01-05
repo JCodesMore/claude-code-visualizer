@@ -1,9 +1,10 @@
 import type { MetaFunction } from "@remix-run/node";
+import { Link } from "@remix-run/react";
 import { useState, useEffect, useTransition } from "react";
-import { 
-  Activity, 
-  RefreshCw, 
-  Trash2, 
+import {
+  Activity,
+  RefreshCw,
+  Trash2,
   List,
   FileText,
   X,
@@ -29,7 +30,8 @@ import {
   Check,
   Lightbulb,
   Loader2,
-  ArrowLeftRight
+  ArrowLeftRight,
+  Workflow
 } from "lucide-react";
 
 import RequestDetailContent from "../components/RequestDetailContent";
@@ -516,6 +518,15 @@ export default function Index() {
               <h1 className="text-lg font-semibold text-gray-900">Claude Code Monitor</h1>
             </div>
             <div className="flex items-center space-x-2">
+              <Link
+                to="/canvas"
+                className="flex items-center space-x-1.5 px-3 py-1.5 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded transition-colors"
+                title="Canvas Visualization"
+              >
+                <Workflow className="w-4 h-4" />
+                <span>Canvas</span>
+              </Link>
+              <div className="w-px h-4 bg-gray-300" />
               <button
                 onClick={() => loadRequests()}
                 className="p-1.5 text-gray-600 hover:bg-gray-100 rounded transition-colors"
